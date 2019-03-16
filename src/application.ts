@@ -1,0 +1,42 @@
+import {Application, ApplicationConfig} from '@loopback/core';
+import {createLogger, transports} from 'winston';
+import {GraphqlServer} from './graphql.server';
+import {GraphqlService} from './services/Graphql.service';
+import {UserService} from './services/User.service';
+
+export class GraphqlApplication extends Application {
+
+    constructor(options: ApplicationConfig = {}) {
+        super(options);
+
+        this.options.port = this.options.port || 3000;
+
+        const logger = createLogger({
+            transports: [
+                new transports.Console(),
+            ],
+        });
+
+        this.server(GraphqlServer);
+
+        // Logger
+        this.bind('logger').to(logger);
+
+        // Jwt
+        this.bind('jwt.secret').to(options.jwt.secret);
+
+        // Server Options
+        this.bind('server.port').to(this.options.port);
+
+        // Services
+        this.bind('services.graphql').toClass(GraphqlService);
+        this.bind('services.user').toClass(UserService);
+
+        // Remote APIS
+        this.bind('api.user').to(options.apis.userApi);
+        this.bind('api.projects').to(options.apis.projectsApi);
+        this.bind('api.jobs').to(options.apis.jobsApi);
+
+    }
+
+}
