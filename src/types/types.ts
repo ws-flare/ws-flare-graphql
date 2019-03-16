@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import {gql} from 'apollo-server-express';
 
 export const typeDefs = gql`
     type User {
@@ -14,10 +14,22 @@ export const typeDefs = gql`
         user: User!
     }
     
+    type Task {
+        id: String!
+        userId: String!
+        projectId: String!
+        name: String!
+        uri: String
+        totalSimulatedUsers: Int
+        runTime: Int
+    }
+    
     type Query {
         users: [User]
         
         projects: [Project]
+        
+        tasks(projectId: String!): [Task]
     }
     
     type Mutation {
@@ -27,5 +39,8 @@ export const typeDefs = gql`
         
         # Projects
         createProject(name: String!): Project
+        
+        # Tasks
+        createTask(projectId: String! name: String! uri: String! totalSimulatedUsers: Int! runTime: Int!): Task
     }
 `;
