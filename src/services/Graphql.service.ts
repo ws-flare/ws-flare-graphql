@@ -32,6 +32,10 @@ export class GraphqlService {
 
                 tasks: (_: null, args: { projectId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.tasksService.getTasks(args.projectId) : [];
+                },
+
+                jobs: (_: null, args: { taskId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.jobsService.getJobs(args.taskId) : [];
                 }
             },
 
