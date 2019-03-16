@@ -7,6 +7,7 @@ import {Project} from '../models/Project.model';
 import {Context} from '../models/Context.model';
 import {Task} from '../models/Task.model';
 import {TasksService} from './Tasks.service';
+import {JobsService} from './Jobs.service';
 
 export class GraphqlService {
 
@@ -18,6 +19,9 @@ export class GraphqlService {
 
     @inject('services.tasks')
     private tasksService: TasksService;
+
+    @inject('services.jobs')
+    private jobsService: JobsService;
 
     getResolvers(): IResolvers {
         return {
@@ -46,6 +50,11 @@ export class GraphqlService {
                 createTask: (_: null, task: Task, ctx: Context) => {
                     return ctx.authenticated ? this.tasksService.createTask({...task, userId: ctx.user.userId}) : null;
                 },
+
+                // Jobs
+                createJob: (_: null, args: { taskId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.jobsService.createJob(ctx.user.userId, args.taskId) : null;
+                }
             },
         }
     }

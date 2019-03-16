@@ -24,6 +24,15 @@ export const typeDefs = gql`
         runTime: Int
     }
     
+    type Job {
+        id: String!
+        createdAt: String!
+        userId: String!
+        taskId: String!
+        isRunning: Boolean
+        passed: Boolean
+    }
+    
     type Query {
         users: [User]
         
@@ -42,5 +51,8 @@ export const typeDefs = gql`
         
         # Tasks
         createTask(projectId: String! name: String! uri: String! totalSimulatedUsers: Int! runTime: Int!): Task
+        
+        # Jobs
+        createJob(taskId: String!): Job
     }
 `;

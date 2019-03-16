@@ -5,6 +5,7 @@ import { GraphqlService } from './services/Graphql.service';
 import { UserService } from './services/User.service';
 import { ProjectsService } from './services/Projects.service';
 import { TasksService } from './services/Tasks.service';
+import {JobsService} from './services/Jobs.service';
 
 export class GraphqlApplication extends Application {
 
@@ -35,6 +36,7 @@ export class GraphqlApplication extends Application {
         this.bind('services.user').toClass(UserService);
         this.bind('services.projects').toClass(ProjectsService);
         this.bind('services.tasks').toClass(TasksService);
+        this.bind('services.jobs').toClass(JobsService);
 
         // Remote APIS
         this.bind('api.user').to(options.apis.userApi);
