@@ -1,8 +1,9 @@
-import {Application, ApplicationConfig} from '@loopback/core';
-import {createLogger, transports} from 'winston';
-import {GraphqlServer} from './graphql.server';
-import {GraphqlService} from './services/Graphql.service';
-import {UserService} from './services/User.service';
+import { Application, ApplicationConfig } from '@loopback/core';
+import { createLogger, transports } from 'winston';
+import { GraphqlServer } from './graphql.server';
+import { GraphqlService } from './services/Graphql.service';
+import { UserService } from './services/User.service';
+import { ProjectsService } from './services/Projects.service';
 
 export class GraphqlApplication extends Application {
 
@@ -31,6 +32,7 @@ export class GraphqlApplication extends Application {
         // Services
         this.bind('services.graphql').toClass(GraphqlService);
         this.bind('services.user').toClass(UserService);
+        this.bind('services.projects').toClass(ProjectsService);
 
         // Remote APIS
         this.bind('api.user').to(options.apis.userApi);

@@ -1,14 +1,14 @@
 import {ApplicationConfig} from '@loopback/core';
 import {GraphqlApplication} from './application';
 
-const {PORT, JWT_SECRET, USER_API, PROJECT_API, JOBS_API} = process.env;
+const {PORT, JWT_SECRET, USER_API, PROJECTS_API, JOBS_API} = process.env;
 
 export async function main(options: ApplicationConfig = {}): Promise<GraphqlApplication> {
     options.port = options.port || PORT;
     options.jwt = {secret: JWT_SECRET};
     options.apis = {
         userApi: USER_API,
-        projectsApi: PROJECT_API,
+        projectsApi: PROJECTS_API,
         jobsApi: JOBS_API
     };
 
