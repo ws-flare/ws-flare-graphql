@@ -68,4 +68,41 @@ describe('Projects', () => {
         expect(response.data.createProject.userId).to.eql('user1');
     });
 
+    it('should get list of projects', async () => {
+        nock(`${apis.projectsApi}`)
+            .get('/projects')
+            .reply(200, [
+                {id: 'abc1', userId: 'user1', name: 'test-name1'},
+                {id: 'abc2', userId: 'user2', name: 'test-name2'},
+                {id: 'abc3', userId: 'user3', name: 'test-name3'}
+            ]);
+
+        const query = gql`
+                query projects {
+                  projects {
+                    id
+                    userId
+                    name
+                  }
+                }
+            `;
+
+        const response = await client.query({
+            query,
+            variables: {name: 'test-name'}
+        });
+
+        expect(response.data.projects.length).to.equal(3);
+
+        expect(response.data.projects[0].id).to.equal('abc1');
+        expect(response.data.projects[1].id).to.equal('abc2');
+        expect(response.data.projects[2].id).to.equal('abc3');
+        expect(response.data.projects[0].userId).to.equal('user1');
+        expect(response.data.projects[1].userId).to.equal('user2');
+        expect(response.data.projects[2].userId).to.equal('user3');
+        expect(response.data.projects[0].name).to.equal('test-name1');
+        expect(response.data.projects[1].name).to.equal('test-name2');
+        expect(response.data.projects[2].name).to.equal('test-name3');
+    });
+
 });

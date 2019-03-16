@@ -16,7 +16,11 @@ export class GraphqlService {
 
     getResolvers(): IResolvers {
         return {
-            Query: {},
+            Query: {
+                projects: (_: null, args: null, ctx: Context) => {
+                    return ctx.authenticated ? this.projectsService.getProjects() : [];
+                }
+            },
 
             Mutation: {
                 // Users
