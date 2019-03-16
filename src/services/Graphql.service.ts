@@ -3,8 +3,10 @@ import { inject } from "@loopback/core";
 import { UserService } from './User.service';
 import { User } from '../models/User.model';
 import { ProjectsService } from './Projects.service';
-import { Project } from '../models/Projects.model';
+import { Project } from '../models/Project.model';
 import { Context } from '../models/Context.model';
+import { Task } from '../models/Task.model';
+import { TasksService } from './Tasks.service';
 
 export class GraphqlService {
 
@@ -13,6 +15,9 @@ export class GraphqlService {
 
     @inject('services.projects')
     private projectsService: ProjectsService;
+
+    @inject('services.tasks')
+    private tasksService: TasksService;
 
     getResolvers(): IResolvers {
         return {
@@ -31,7 +36,12 @@ export class GraphqlService {
                 // Projects
                 createProject: (_: null, project: Project, ctx: Context) => {
                     return ctx.authenticated ? this.projectsService.createProject(ctx.user.userId, project.name) : null;
-                }
+                },
+
+                // Tasks
+                createTask: (_: null, task: Task, ctx: Context) => {
+                    return ctx.authenticated ? this.tasksService.createTask(task) : null;
+                },
             },
         }
     }
