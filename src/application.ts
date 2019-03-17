@@ -52,7 +52,7 @@ export class GraphqlApplication extends Application {
         this.bind('amqp.user').to(options.amqp.user);
         this.bind('amqp.pwd').to(options.amqp.pwd);
         this.bind('amqp.conn').toDynamicValue(async () => await connect({
-            hostname: options.amqp.host,
+            hostname: options.amqp.url,
             port: options.amqp.port,
             username: options.amqp.user,
             password: options.amqp.pwd
