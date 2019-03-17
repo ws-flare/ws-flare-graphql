@@ -1,4 +1,4 @@
-import {gql} from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
     type User {
@@ -33,6 +33,13 @@ export const typeDefs = gql`
         passed: Boolean
     }
     
+    type Node {
+        id: String!
+        createdAt: String!
+        jobId: String!
+        name: String!
+    }
+    
     type Query {
         users: [User]
         
@@ -56,5 +63,8 @@ export const typeDefs = gql`
         
         # Jobs
         createJob(taskId: String!): Job
+        
+        # Nodes
+        createNode(jobId: String! name: String!): Node
     }
 `;

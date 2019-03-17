@@ -1,13 +1,14 @@
-import {IResolvers} from "graphql-tools";
-import {inject} from "@loopback/core";
-import {UserService} from './User.service';
-import {User} from '../models/User.model';
-import {ProjectsService} from './Projects.service';
-import {Project} from '../models/Project.model';
-import {Context} from '../models/Context.model';
-import {Task} from '../models/Task.model';
-import {TasksService} from './Tasks.service';
-import {JobsService} from './Jobs.service';
+import { IResolvers } from "graphql-tools";
+import { inject } from "@loopback/core";
+import { UserService } from './User.service';
+import { User } from '../models/User.model';
+import { ProjectsService } from './Projects.service';
+import { Project } from '../models/Project.model';
+import { Context } from '../models/Context.model';
+import { Task } from '../models/Task.model';
+import { TasksService } from './Tasks.service';
+import { JobsService } from './Jobs.service';
+import { NodesService } from './Nodes.service';
 
 export class GraphqlService {
 
@@ -22,6 +23,9 @@ export class GraphqlService {
 
     @inject('services.jobs')
     private jobsService: JobsService;
+
+    @inject('services.nodes')
+    private nodesService: NodesService;
 
     getResolvers(): IResolvers {
         return {
@@ -58,6 +62,11 @@ export class GraphqlService {
                 // Jobs
                 createJob: (_: null, args: { taskId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.jobsService.createJob(ctx.user.userId, args.taskId) : null;
+                },
+
+                // Nodes
+                createNode: (_: null, args: { jobId: string, name: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.nodesService.createNode(args.jobId, args.name) : null;
                 }
             },
         }
