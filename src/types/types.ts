@@ -48,6 +48,8 @@ export const typeDefs = gql`
         tasks(projectId: String!): [Task]
         
         jobs(taskId: String!): [Job]
+        
+        nodes(jobId: String!): [Node]
     }
     
     type Mutation {

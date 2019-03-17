@@ -70,4 +70,48 @@ describe('Nodes', () => {
         expect(response.data.createNode.name).to.eql('test-name');
     });
 
+    it('should get a list of nodes in a job', async () => {
+        nock(`${apis.jobsApi}`)
+            .filteringPath(() => '/nodes')
+            .get('/nodes')
+            .reply(200, [
+                {id: 'node1', createdAt: 'today1', jobId: 'job1', name: 'test-name1'},
+                {id: 'node2', createdAt: 'today2', jobId: 'job2', name: 'test-name2'},
+                {id: 'node3', createdAt: 'today3', jobId: 'job3', name: 'test-name3'}
+            ]);
+
+        const query = gql`
+                query nodes($jobId: String!) {
+                  nodes(jobId: $jobId) {
+                    id
+                    createdAt
+                    jobId
+                    name
+                  }
+                }
+            `;
+
+        const response = await client.query({
+            query,
+            variables: {jobId: 'job1'}
+        });
+
+        expect(response.data.nodes.length).to.equal(3);
+
+        expect(response.data.nodes[0].id).to.equal('node1');
+        expect(response.data.nodes[0].createdAt).to.equal('today1');
+        expect(response.data.nodes[0].jobId).to.equal('job1');
+        expect(response.data.nodes[0].name).to.equal('test-name1');
+
+        expect(response.data.nodes[1].id).to.equal('node2');
+        expect(response.data.nodes[1].createdAt).to.equal('today2');
+        expect(response.data.nodes[1].jobId).to.equal('job2');
+        expect(response.data.nodes[1].name).to.equal('test-name2');
+
+        expect(response.data.nodes[2].id).to.equal('node3');
+        expect(response.data.nodes[2].createdAt).to.equal('today3');
+        expect(response.data.nodes[2].jobId).to.equal('job3');
+        expect(response.data.nodes[2].name).to.equal('test-name3');
+    });
+
 });
