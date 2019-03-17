@@ -5,6 +5,7 @@ services:
   - docker
 install:
   - yarn --ignore-engines
+  - docker pull rabbitmq
 script:
   - yarn test
   - yarn build

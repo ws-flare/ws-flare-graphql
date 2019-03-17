@@ -1,14 +1,14 @@
 import "isomorphic-fetch";
-import {gql} from 'apollo-server-express';
-import {ApolloClient} from 'apollo-client';
-import {createHttpLink} from 'apollo-link-http';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import { gql } from 'apollo-server-express';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import * as nock from 'nock';
-import {expect} from 'chai';
-import {setContext} from 'apollo-link-context';
-import {main} from '../..';
-import {GraphqlApplication} from '../../application';
-import {apis} from '../test-helpers';
+import { expect } from 'chai';
+import { setContext } from 'apollo-link-context';
+import { main } from '../..';
+import { GraphqlApplication } from '../../application';
+import { apis, Container, startMqContainer } from '../test-helpers';
 
 describe('User', () => {
 
@@ -16,9 +16,13 @@ describe('User', () => {
 
     let app: GraphqlApplication;
     let client: any;
+    let container: Container;
+    let port: Number;
 
     beforeEach(async () => {
-        app = await main({port: graphqlPort});
+        ({container, port} = await startMqContainer());
+
+        app = await main({port: graphqlPort, amqp: {port}});
 
         const authLink = setContext((_, {headers}) => {
             return {
@@ -37,6 +41,7 @@ describe('User', () => {
 
     afterEach(async () => {
         await app.stop();
+        await container.stop();
 
         nock.cleanAll();
         nock.restore();

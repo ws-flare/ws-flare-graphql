@@ -1,6 +1,6 @@
-import {inject} from '@loopback/core';
-import {post, get} from 'superagent';
-import {Task} from '../models/Task.model';
+import { inject } from '@loopback/core';
+import { post, get } from 'superagent';
+import { Task } from '../models/Task.model';
 
 export class TasksService {
 
@@ -15,6 +15,12 @@ export class TasksService {
 
     async getTasks(projectId: string) {
         let res = await get(`${this.projectApi}/tasks?filter=${JSON.stringify({where: {projectId}})}`);
+
+        return res.body;
+    }
+
+    async getTask(taskId: string) {
+        let res = await get(`${this.projectApi}/tasks/${taskId}`);
 
         return res.body;
     }

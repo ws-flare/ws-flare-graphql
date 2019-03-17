@@ -8,7 +8,7 @@ import { expect } from 'chai';
 import { setContext } from 'apollo-link-context';
 import { main } from '../..';
 import { GraphqlApplication } from '../../application';
-import { apis } from '../test-helpers';
+import { apis, Container, startMqContainer } from '../test-helpers';
 
 describe('Projects', () => {
 
@@ -16,9 +16,13 @@ describe('Projects', () => {
 
     let app: GraphqlApplication;
     let client: any;
+    let container: Container;
+    let port: Number;
 
     beforeEach(async () => {
-        app = await main({port: graphqlPort});
+        ({container, port} = await startMqContainer());
+
+        app = await main({port: graphqlPort, amqp: {port}});
 
         const authLink = setContext((_, {headers}) => {
             return {
@@ -37,6 +41,7 @@ describe('Projects', () => {
 
     afterEach(async () => {
         await app.stop();
+        await container.stop();
 
         nock.cleanAll();
         nock.restore();

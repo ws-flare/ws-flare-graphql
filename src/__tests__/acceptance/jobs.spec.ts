@@ -1,24 +1,38 @@
 import "isomorphic-fetch";
-import {gql} from 'apollo-server-express';
-import {ApolloClient} from 'apollo-client';
-import {createHttpLink} from 'apollo-link-http';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import { gql } from 'apollo-server-express';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import * as nock from 'nock';
-import {expect} from 'chai';
-import {setContext} from 'apollo-link-context';
-import {main} from '../..';
-import {GraphqlApplication} from '../../application';
-import {apis} from '../test-helpers';
+import { expect } from 'chai';
+import { setContext } from 'apollo-link-context';
+import { main } from '../..';
+import { GraphqlApplication } from '../../application';
+import { apis, Container, getAMQPConn, startMqContainer } from '../test-helpers';
+import { Channel, Connection, ConsumeMessage } from 'amqplib';
 
 describe('Jobs', () => {
 
     const graphqlPort = 8000;
+    const createJobQueue = 'job.create';
 
     let app: GraphqlApplication;
     let client: any;
+    let container: Container;
+    let port: number;
+    let amqpConn: Connection;
+    let createJobChannel: Channel;
 
     beforeEach(async () => {
-        app = await main({port: graphqlPort});
+        ({container, port} = await startMqContainer());
+
+        amqpConn = await getAMQPConn(port);
+
+        createJobChannel = await amqpConn.createChannel();
+
+        await createJobChannel.assertQueue(createJobQueue);
+
+        app = await main({port: graphqlPort, amqp: {port}});
 
         const authLink = setContext((_, {headers}) => {
             return {
@@ -37,6 +51,7 @@ describe('Jobs', () => {
 
     afterEach(async () => {
         await app.stop();
+        await container.stop();
 
         nock.cleanAll();
         nock.restore();
@@ -47,6 +62,18 @@ describe('Jobs', () => {
         nock(`${apis.jobsApi}`)
             .post('/jobs')
             .reply(200, {id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
+
+        nock(`${apis.projectsApi}`)
+            .get('/tasks/task1')
+            .reply(200, {
+                id: 'abc1',
+                userId: 'user1',
+                projectId: 'project1',
+                name: 'task1',
+                uri: 'ws://localhost',
+                totalSimulatedUsers: 20,
+                runTime: 1000
+            });
 
         const mutation = gql`
                 mutation createJob($taskId: String!) {
@@ -70,6 +97,22 @@ describe('Jobs', () => {
         expect(response.data.createJob.taskId).to.eql('task1');
         expect(response.data.createJob.isRunning).to.eql(true);
         expect(response.data.createJob.passed).to.eql(false);
+
+        await createJobChannel.consume(createJobQueue, (message: ConsumeMessage) => {
+            const parsed = JSON.parse((message).content.toString());
+            expect(parsed.taskId).to.eql('task1');
+            expect(parsed.job).to.eql({id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
+            expect(parsed.task).to.eql({
+                id: 'abc1',
+                userId: 'user1',
+                projectId: 'project1',
+                name: 'task1',
+                uri: 'ws://localhost',
+                totalSimulatedUsers: 20,
+                runTime: 1000
+            });
+        }, {noAck: true});
+
     });
 
     it('should be able to get jobs in a task', async () => {
