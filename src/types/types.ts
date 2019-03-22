@@ -38,6 +38,10 @@ export const typeDefs = gql`
         createdAt: String!
         jobId: String!
         name: String!
+        running: Boolean!
+        totalSuccessfulConnections: Int!
+        totalFailedConnections: Int!
+        totalDroppedConnections: Int!
     }
     
     type Query {

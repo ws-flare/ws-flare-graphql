@@ -51,11 +51,11 @@ describe('Nodes', () => {
     it('should create a new node', async () => {
         nock(`${apis.jobsApi}`)
             .post('/nodes')
-            .reply(200, {id: 'node1', createdAt: 'today', jobId: 'job1', name: 'test-name'});
+            .reply(200, {id: 'node1', createdAt: 'today', jobId: 'job1', name: 'test-name', running: true});
 
         const mutation = gql`
-                mutation createNode($jobId: String! $name: String!) {
-                  createNode(jobId: $jobId name: $name) {
+                mutation createNode($jobId: String! $name: String! $running: Boolean!) {
+                  createNode(jobId: $jobId name: $name running: $running) {
                     id
                     createdAt
                     jobId
@@ -66,13 +66,14 @@ describe('Nodes', () => {
 
         const response = await client.mutate({
             mutation,
-            variables: {jobId: 'job1', name: 'test-name'}
+            variables: {jobId: 'job1', name: 'test-name', running: true}
         });
 
         expect(response.data.createNode.id).to.eql('node1');
         expect(response.data.createNode.createdAt).to.eql('today');
         expect(response.data.createNode.jobId).to.eql('job1');
         expect(response.data.createNode.name).to.eql('test-name');
+        expect(response.data.createNode.running).to.eql(true);
     });
 
     it('should get a list of nodes in a job', async () => {
@@ -80,9 +81,36 @@ describe('Nodes', () => {
             .filteringPath(() => '/nodes')
             .get('/nodes')
             .reply(200, [
-                {id: 'node1', createdAt: 'today1', jobId: 'job1', name: 'test-name1'},
-                {id: 'node2', createdAt: 'today2', jobId: 'job2', name: 'test-name2'},
-                {id: 'node3', createdAt: 'today3', jobId: 'job3', name: 'test-name3'}
+                {
+                    id: 'node1',
+                    createdAt: 'today1',
+                    jobId: 'job1',
+                    name: 'test-name1',
+                    running: true,
+                    totalSuccessfulConnections: 20,
+                    totalFailedConnections: 30,
+                    totalDroppedConnections: 10
+                },
+                {
+                    id: 'node2',
+                    createdAt: 'today2',
+                    jobId: 'job2',
+                    name: 'test-name2',
+                    running: false,
+                    totalSuccessfulConnections: 8,
+                    totalFailedConnections: 32,
+                    totalDroppedConnections: 15
+                },
+                {
+                    id: 'node3',
+                    createdAt: 'today3',
+                    jobId: 'job3',
+                    name: 'test-name3',
+                    running: true,
+                    totalSuccessfulConnections: 17,
+                    totalFailedConnections: 6,
+                    totalDroppedConnections: 3
+                }
             ]);
 
         const query = gql`
@@ -92,6 +120,10 @@ describe('Nodes', () => {
                     createdAt
                     jobId
                     name
+                    running
+                    totalSuccessfulConnections
+                    totalFailedConnections
+                    totalDroppedConnections
                   }
                 }
             `;
@@ -107,16 +139,28 @@ describe('Nodes', () => {
         expect(response.data.nodes[0].createdAt).to.equal('today1');
         expect(response.data.nodes[0].jobId).to.equal('job1');
         expect(response.data.nodes[0].name).to.equal('test-name1');
+        expect(response.data.nodes[0].running).to.equal(true);
+        expect(response.data.nodes[0].totalSuccessfulConnections).to.equal(20);
+        expect(response.data.nodes[0].totalFailedConnections).to.equal(30);
+        expect(response.data.nodes[0].totalDroppedConnections).to.equal(10);
 
         expect(response.data.nodes[1].id).to.equal('node2');
         expect(response.data.nodes[1].createdAt).to.equal('today2');
         expect(response.data.nodes[1].jobId).to.equal('job2');
         expect(response.data.nodes[1].name).to.equal('test-name2');
+        expect(response.data.nodes[1].running).to.equal(false);
+        expect(response.data.nodes[1].totalSuccessfulConnections).to.equal(8);
+        expect(response.data.nodes[1].totalFailedConnections).to.equal(32);
+        expect(response.data.nodes[1].totalDroppedConnections).to.equal(15);
 
         expect(response.data.nodes[2].id).to.equal('node3');
         expect(response.data.nodes[2].createdAt).to.equal('today3');
         expect(response.data.nodes[2].jobId).to.equal('job3');
         expect(response.data.nodes[2].name).to.equal('test-name3');
+        expect(response.data.nodes[2].running).to.equal(true);
+        expect(response.data.nodes[2].totalSuccessfulConnections).to.equal(17);
+        expect(response.data.nodes[2].totalFailedConnections).to.equal(6);
+        expect(response.data.nodes[2].totalDroppedConnections).to.equal(3);
     });
 
 });

@@ -69,8 +69,8 @@ export class GraphqlService {
                 },
 
                 // Nodes
-                createNode: (_: null, args: { jobId: string, name: string }, ctx: Context) => {
-                    return ctx.authenticated ? this.nodesService.createNode(args.jobId, args.name) : null;
+                createNode: (_: null, args: { jobId: string, name: string, running: boolean }, ctx: Context) => {
+                    return ctx.authenticated ? this.nodesService.createNode(args.jobId, args.name, args.running) : null;
                 }
             },
         }

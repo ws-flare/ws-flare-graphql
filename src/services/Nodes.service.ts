@@ -6,8 +6,8 @@ export class NodesService {
     @inject('api.jobs')
     private jobsApi: string;
 
-    async createNode(jobId: string, name: string) {
-        const res = await post(`${this.jobsApi}/nodes`).send({jobId, name});
+    async createNode(jobId: string, name: string, running: boolean) {
+        const res = await post(`${this.jobsApi}/nodes`).send({jobId, name, running});
 
         return res.body;
     }
