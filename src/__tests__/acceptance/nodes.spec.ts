@@ -60,6 +60,7 @@ describe('Nodes', () => {
                     createdAt
                     jobId
                     name
+                    running
                   }
                 }
             `;

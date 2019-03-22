@@ -71,6 +71,6 @@ export const typeDefs = gql`
         createJob(taskId: String!): Job
         
         # Nodes
-        createNode(jobId: String! name: String!): Node
+        createNode(jobId: String! name: String! running: Boolean!): Node
     }
 `;
