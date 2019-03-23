@@ -39,9 +39,9 @@ export const typeDefs = gql`
         jobId: String!
         name: String!
         running: Boolean!
-        totalSuccessfulConnections: Int!
-        totalFailedConnections: Int!
-        totalDroppedConnections: Int!
+        totalSuccessfulConnections: Int
+        totalFailedConnections: Int
+        totalDroppedConnections: Int
     }
     
     type Query {
