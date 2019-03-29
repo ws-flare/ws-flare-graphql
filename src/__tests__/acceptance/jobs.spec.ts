@@ -164,4 +164,32 @@ describe('Jobs', () => {
         expect(response.data.jobs[2].passed).to.eql(false);
     });
 
+    it('should be able to get a single job', async () => {
+        nock(`${apis.jobsApi}`)
+            .get('/jobs/abc123')
+            .reply(200, {id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
+
+        const query = gql`
+                query job($jobId: String!) {
+                  job(jobId: $jobId) {
+                    id
+                    userId
+                    taskId
+                    isRunning
+                    passed
+                  }
+                }
+            `;
+
+        const response = await client.query({
+            query,
+            variables: {jobId: 'abc123'}
+        });
+
+        expect(response.data.job.id).to.eql('job1');
+        expect(response.data.job.userId).to.eql('user1');
+        expect(response.data.job.taskId).to.eql('task1');
+        expect(response.data.job.isRunning).to.eql(true);
+        expect(response.data.job.passed).to.eql(false);
+    });
 });

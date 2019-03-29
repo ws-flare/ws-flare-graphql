@@ -79,6 +79,8 @@ export const typeDefs = gql`
         
         jobs(taskId: String!): [Job]
         
+        job(jobId: String!): Job
+        
         nodes(jobId: String!): [Node]
         
         usages(jobId: String!): [Usage]

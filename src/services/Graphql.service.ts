@@ -47,6 +47,10 @@ export class GraphqlService {
                     return ctx.authenticated ? this.jobsService.getJobs(args.taskId) : [];
                 },
 
+                job: (_: null, args: { jobId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.jobsService.getJob(args.jobId) : [];
+                },
+
                 nodes: (_: null, args: { jobId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.nodesService.getNodes(args.jobId) : [];
                 },

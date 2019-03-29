@@ -34,4 +34,10 @@ export class JobsService {
 
         return res.body;
     }
+
+    async getJob(jobId: string) {
+        const res = await get(`${this.jobsApi}/jobs/${jobId}`);
+
+        return res.body;
+    }
 }
