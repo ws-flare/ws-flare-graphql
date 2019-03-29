@@ -9,6 +9,7 @@ import { Task } from '../models/Task.model';
 import { TasksService } from './Tasks.service';
 import { JobsService } from './Jobs.service';
 import { NodesService } from './Nodes.service';
+import { MonitorService } from './monitor.service';
 
 export class GraphqlService {
 
@@ -27,6 +28,9 @@ export class GraphqlService {
     @inject('services.nodes')
     private nodesService: NodesService;
 
+    @inject('services.monitor')
+    private monitorService: MonitorService;
+
     getResolvers(): IResolvers {
         return {
             Query: {
@@ -44,6 +48,10 @@ export class GraphqlService {
 
                 nodes: (_: null, args: { jobId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.nodesService.getNodes(args.jobId) : [];
+                },
+
+                usages: (_: null, args: { jobId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.monitorService.getUsages(args.jobId) : [];
                 }
             },
 

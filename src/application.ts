@@ -8,6 +8,7 @@ import { ProjectsService } from './services/Projects.service';
 import { TasksService } from './services/Tasks.service';
 import { JobsService } from './services/Jobs.service';
 import { NodesService } from './services/Nodes.service';
+import { MonitorService } from './services/monitor.service';
 
 export class GraphqlApplication extends Application {
 
@@ -40,11 +41,13 @@ export class GraphqlApplication extends Application {
         this.bind('services.tasks').toClass(TasksService);
         this.bind('services.jobs').toClass(JobsService);
         this.bind('services.nodes').toClass(NodesService);
+        this.bind('services.monitor').toClass(MonitorService);
 
         // Remote APIS
         this.bind('api.user').to(options.apis.userApi);
         this.bind('api.projects').to(options.apis.projectsApi);
         this.bind('api.jobs').to(options.apis.jobsApi);
+        this.bind('api.monitor').to(options.apis.monitorApi);
 
         // AMQP
         this.bind('amqp.url').to(options.amqp.url);

@@ -50,6 +50,22 @@ export const typeDefs = gql`
         totalDroppedConnections: Int
     }
     
+    type Usage {
+        id: String!
+        jobId: String!
+        appId: String!
+        mem: Int!
+        cpu: Int!
+        disk: Int!
+        mem_quota: Int!
+        disk_quota: Int!
+        instance: Int!
+        time: String!
+        state: String!
+        uptime: Int!
+        name: String!
+    }
+    
     type Query {
         users: [User]
         
@@ -60,6 +76,8 @@ export const typeDefs = gql`
         jobs(taskId: String!): [Job]
         
         nodes(jobId: String!): [Node]
+        
+        usages(jobId: String!): [Usage]
     }
     
     type Mutation {

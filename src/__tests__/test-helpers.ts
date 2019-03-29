@@ -13,7 +13,8 @@ export interface Container {
 export const apis = {
     userApi: 'http://user.com',
     projectsApi: 'http://projects.com',
-    jobsApi: 'http://jobs.com'
+    jobsApi: 'http://jobs.com',
+    monitorApi: 'http://monitor.com'
 };
 
 export async function startMqContainer(): Promise<{ container: Container, port: number }> {
