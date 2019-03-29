@@ -12,6 +12,7 @@ export const typeDefs = gql`
         userId: String!
         name: String!
         user: User!
+        tasks: [Task]
     }
     
     type Task {
@@ -28,6 +29,7 @@ export const typeDefs = gql`
         cfOrg: String!
         cfSpace: String!
         cfApps: String!
+        jobs: [Job]
     }
     
     type Job {
@@ -37,6 +39,8 @@ export const typeDefs = gql`
         taskId: String!
         isRunning: Boolean
         passed: Boolean
+        usages: [Usage]
+        nodes: [Node]
     }
     
     type Node {

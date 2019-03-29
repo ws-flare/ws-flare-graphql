@@ -10,6 +10,7 @@ import { TasksService } from './Tasks.service';
 import { JobsService } from './Jobs.service';
 import { NodesService } from './Nodes.service';
 import { MonitorService } from './monitor.service';
+import { Job } from '../models/Job.model';
 
 export class GraphqlService {
 
@@ -53,6 +54,20 @@ export class GraphqlService {
                 usages: (_: null, args: { jobId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.monitorService.getUsages(args.jobId) : [];
                 }
+            },
+
+            Project: {
+                tasks: (project: Project) => this.tasksService.getTasks(project.id)
+            },
+
+            Task: {
+                jobs: (task: Task) => this.jobsService.getJobs(task.id)
+            },
+
+            Job: {
+                nodes: (job: Job) => this.nodesService.getNodes(job.id),
+
+                usages: (job: Job) => this.monitorService.getUsages(job.id),
             },
 
             Mutation: {
