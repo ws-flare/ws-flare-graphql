@@ -57,9 +57,9 @@ describe('Usages', () => {
                     id: 'usage1',
                     jobId: 'job1-id',
                     appId: 'app1-id',
-                    mem: 1024,
-                    cpu: 2056,
-                    disk: 6008,
+                    mem: 10.56,
+                    cpu: 0.23,
+                    disk: 70.55,
                     mem_quota: 2056,
                     disk_quota: 50077,
                     instance: 0,
@@ -130,9 +130,9 @@ describe('Usages', () => {
         expect(response.data.usages[0].id).to.equal('usage1');
         expect(response.data.usages[0].jobId).to.equal('job1-id');
         expect(response.data.usages[0].appId).to.equal('app1-id');
-        expect(response.data.usages[0].mem).to.equal(1024);
-        expect(response.data.usages[0].cpu).to.equal(2056);
-        expect(response.data.usages[0].disk).to.equal(6008);
+        expect(response.data.usages[0].mem).to.equal(10.56);
+        expect(response.data.usages[0].cpu).to.equal(0.23);
+        expect(response.data.usages[0].disk).to.equal(70.55);
         expect(response.data.usages[0].mem_quota).to.equal(2056);
         expect(response.data.usages[0].disk_quota).to.equal(50077);
         expect(response.data.usages[0].instance).to.equal(0);

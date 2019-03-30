@@ -58,9 +58,9 @@ export const typeDefs = gql`
         id: String!
         jobId: String!
         appId: String!
-        mem: Int!
-        cpu: Int!
-        disk: Int!
+        mem: Float!
+        cpu: Float!
+        disk: Float!
         mem_quota: Int!
         disk_quota: Int!
         instance: Int!
