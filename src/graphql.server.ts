@@ -1,13 +1,13 @@
-import {Server, CoreBindings, Application} from '@loopback/core';
-import {Context, inject} from '@loopback/context';
-import {ApolloServer, makeExecutableSchema} from 'apollo-server-express';
+import { Server, CoreBindings, Application } from '@loopback/core';
+import { Context, inject } from '@loopback/context';
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import * as express from 'express';
-import {verify} from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import * as jwt from 'express-jwt';
-import {Logger} from 'winston';
+import { Logger } from 'winston';
 import * as http from 'http';
-import {GraphqlService} from './services/Graphql.service';
-import {typeDefs} from './types/types';
+import { GraphqlService } from './services/Graphql.service';
+import { typeDefs } from './types/types';
 
 export class GraphqlServer extends Context implements Server {
     private _listening: boolean = false;
@@ -36,9 +36,9 @@ export class GraphqlServer extends Context implements Server {
     async start(): Promise<void> {
         const expressServer = express();
 
-        // const authMiddleware = jwt({secret: this.jwtSecret, credentialsRequired: false});
+        const authMiddleware = jwt({secret: this.jwtSecret, credentialsRequired: false});
 
-        // expressServer.use(authMiddleware);
+        expressServer.use(authMiddleware);
 
         expressServer.get('/', (req, res) => res.send({uptime: process.uptime()}));
 
