@@ -36,9 +36,9 @@ export class GraphqlServer extends Context implements Server {
     async start(): Promise<void> {
         const expressServer = express();
 
-        const authMiddleware = jwt({secret: this.jwtSecret, credentialsRequired: false});
+        // const authMiddleware = jwt({secret: this.jwtSecret, credentialsRequired: false});
 
-        expressServer.use(authMiddleware);
+        // expressServer.use(authMiddleware);
 
         expressServer.get('/', (req, res) => res.send({uptime: process.uptime()}));
 
