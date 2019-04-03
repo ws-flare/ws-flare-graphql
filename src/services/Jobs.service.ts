@@ -22,11 +22,13 @@ export class JobsService {
 
         const task = await this.tasksService.getTask(taskId);
 
-        task.scripts = JSON.parse(task.scripts);
-
         const channel = await this.amqp.createChannel();
         await channel.assertQueue(this.createJobChannel);
-        await channel.sendToQueue(this.createJobChannel, new Buffer((JSON.stringify({taskId, job: res.body, task}))));
+        await channel.sendToQueue(this.createJobChannel, new Buffer((JSON.stringify({
+            taskId, job: res.body, task: {
+                ...task, scripts: JSON.parse(task.scripts)
+            }
+        }))));
 
         return res.body;
     }
