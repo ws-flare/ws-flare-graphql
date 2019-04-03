@@ -70,9 +70,7 @@ describe('Jobs', () => {
                 userId: 'user1',
                 projectId: 'project1',
                 name: 'task1',
-                uri: 'ws://localhost',
-                totalSimulatedUsers: 20,
-                runTime: 1000
+                scripts: JSON.stringify([{start: 30}])
             });
 
         const mutation = gql`
@@ -107,9 +105,7 @@ describe('Jobs', () => {
                 userId: 'user1',
                 projectId: 'project1',
                 name: 'task1',
-                uri: 'ws://localhost',
-                totalSimulatedUsers: 20,
-                runTime: 1000
+                scripts: [{start: 30}]
             });
         }, {noAck: true});
 

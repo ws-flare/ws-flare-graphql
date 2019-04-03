@@ -20,15 +20,13 @@ export const typeDefs = gql`
         userId: String!
         projectId: String!
         name: String!
-        uri: String!
-        totalSimulatedUsers: Int!
-        runTime: Int!
         cfApi: String!
         cfUser: String!
         cfPass: String!
         cfOrg: String!
         cfSpace: String!
         cfApps: String!
+        scripts: String!
         jobs: [Job]
     }
     
@@ -77,6 +75,8 @@ export const typeDefs = gql`
         
         tasks(projectId: String!): [Task]
         
+        task(taskId: String!): Task
+        
         jobs(taskId: String!): [Job]
         
         job(jobId: String!): Job
@@ -95,7 +95,9 @@ export const typeDefs = gql`
         createProject(name: String!): Project
         
         # Tasks
-        createTask(projectId: String! name: String! uri: String! totalSimulatedUsers: Int! runTime: Int! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String!): Task
+        createTask(projectId: String! name: String! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String! scripts: String!): Task
+        
+        updateTask(id: String! projectId: String! name: String! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String! scripts: String!): Task
         
         # Jobs
         createJob(taskId: String!): Job

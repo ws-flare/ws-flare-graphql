@@ -43,6 +43,10 @@ export class GraphqlService {
                     return ctx.authenticated ? this.tasksService.getTasks(args.projectId) : [];
                 },
 
+                task: (_: null, args: { taskId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.tasksService.getTask(args.taskId) : [];
+                },
+
                 jobs: (_: null, args: { taskId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.jobsService.getJobs(args.taskId) : [];
                 },
@@ -88,6 +92,10 @@ export class GraphqlService {
                 // Tasks
                 createTask: (_: null, task: Task, ctx: Context) => {
                     return ctx.authenticated ? this.tasksService.createTask({...task, userId: ctx.user.userId}) : null;
+                },
+
+                updateTask: (_: null, task: Task, ctx: Context) => {
+                    return ctx.authenticated ? this.tasksService.updateTask({...task, userId: ctx.user.userId}) : null;
                 },
 
                 // Jobs
