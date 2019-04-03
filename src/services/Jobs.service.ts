@@ -2,8 +2,12 @@ import { inject } from '@loopback/core';
 import { post, get } from 'superagent';
 import { Connection } from 'amqplib';
 import { TasksService } from './Tasks.service';
+import { Logger } from 'winston';
 
 export class JobsService {
+
+    @inject('logger')
+    private logger: Logger;
 
     @inject('api.jobs')
     private jobsApi: string;
@@ -21,6 +25,14 @@ export class JobsService {
         const res = await post(`${this.jobsApi}/jobs`).send({userId, taskId, isRunning: true});
 
         const task = await this.tasksService.getTask(taskId);
+
+        this.logger.info(task);
+        this.logger.info('===================================');
+        this.logger.info({
+            taskId, job: res.body, task: {
+                ...task, scripts: JSON.parse(task.scripts)
+            }
+        });
 
         const channel = await this.amqp.createChannel();
         await channel.assertQueue(this.createJobChannel);
