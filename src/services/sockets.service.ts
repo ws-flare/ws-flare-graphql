@@ -68,6 +68,9 @@ export class SocketsService {
         const max = await this.getMaxConnectedSocketsDate(jobId);
         let min = await this.getMinConnectedSocketsDate(jobId);
 
+        this.logger.info(`Max: ${max}`);
+        this.logger.info(`Min: ${min}`);
+
         let socketTicks: ConnectedSocketTick[] = [];
         let tickCount = 0;
 
