@@ -21,7 +21,8 @@ export class SocketsService {
     async getMinConnectedSocketsDate(jobId: string) {
         const filter = {
             where: {
-                jobId
+                jobId,
+                connectionTime: {neq: null}
             },
             order: 'connectionTime ASC',
             limit: 1,
@@ -36,7 +37,8 @@ export class SocketsService {
     async getMaxConnectedSocketsDate(jobId: string) {
         const filter = {
             where: {
-                jobId
+                jobId,
+                connectionTime: {neq: null}
             },
             order: 'connectionTime DESC',
             limit: 1,
