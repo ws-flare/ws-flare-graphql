@@ -50,13 +50,13 @@ export class SocketsService {
         return res.body.length === 1 ? res.body[0].connectionTime : null;
     }
 
-    async getTotalConnectedSocketsWithinTick(jobId: string, gt: string, lt: string) {
+    async getTotalConnectedSocketsWithinTick(jobId: string, gte: string, lte: string) {
         const filter = {
             jobId,
             connected: true,
             and: [
-                {connectionTime: {gt}},
-                {connectionTime: {lt}}
+                {connectionTime: {gte}},
+                {connectionTime: {lte}}
             ]
         };
 
