@@ -90,10 +90,7 @@ export class GraphqlService {
 
                 usages: (job: Job) => this.monitorService.getUsages(job.id),
 
-                connectedSocketTimeFrame: (job: Job) => {
-                    console.log(job);
-                    return this.socketsService.getTicksWithinTimeFrame(job.id, 10)
-                }
+                connectedSocketTimeFrame: (job: Job) => this.socketsService.getTicksWithinTimeFrame(job.id, 10)
             },
 
             ConnectedSocketTick: {

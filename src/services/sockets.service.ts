@@ -73,8 +73,6 @@ export class SocketsService {
             ]
         };
 
-
-
         let res = await get(`${this.jobsApi}/sockets/count?where=${JSON.stringify(filter)}`);
 
         return res.body;
