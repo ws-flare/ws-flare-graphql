@@ -54,11 +54,30 @@ export class SocketsService {
         const filter = {
             jobId,
             connected: true,
+            connectionTime: {neq: null},
             and: [
                 {connectionTime: {gte}},
                 {connectionTime: {lte}}
+            ],
+            or: [
+                {
+                    and: [
+                        {connectionTime: {gte}},
+                        {connectionTime: {lte}},
+                        {disconnectTime: {gt: gte}}
+                    ]
+                },
+                {
+                    and: [
+                        {connectionTime: {gte}},
+                        {connectionTime: {lte}},
+                        {disconnectTime: {eq: null}}
+                    ]
+                },
             ]
         };
+
+
 
         let res = await get(`${this.jobsApi}/sockets/count?where=${JSON.stringify(filter)}`);
 
