@@ -2,8 +2,12 @@ import {inject} from '@loopback/core';
 import {get} from 'superagent';
 import * as moment from 'moment';
 import {ConnectedSocketTick} from '../models/socket.model';
+import {Logger} from 'winston';
 
 export class SocketsService {
+
+    @inject('logger')
+    private logger: Logger;
 
     @inject('api.jobs')
     private jobsApi: string;
@@ -60,6 +64,7 @@ export class SocketsService {
     }
 
     async getTicksWithinTimeFrame(jobId: string, tickSeconds: number): Promise<ConnectedSocketTick[]> {
+        this.logger.info('in getTicksWithinTimeFrame');
         const max = await this.getMaxConnectedSocketsDate(jobId);
         let min = await this.getMinConnectedSocketsDate(jobId);
 
@@ -74,6 +79,8 @@ export class SocketsService {
             tickCount += tickSeconds;
             min = tick;
         }
+
+        this.logger.info(socketTicks);
 
         return socketTicks;
     }
