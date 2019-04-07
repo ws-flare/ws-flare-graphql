@@ -60,7 +60,7 @@ export class SocketsService {
                     and: [
                         {connectionTime: {gte}},
                         {connectionTime: {lte}},
-                        {disconnectTime: {gt: gte}}
+                        {disconnectTime: {gt: lte}}
                     ]
                 },
                 {
