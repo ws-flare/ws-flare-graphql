@@ -60,6 +60,7 @@
     "express-jwt": "^5.3.1",
     "graphql": "^14.1.1",
     "jsonwebtoken": "^8.5.0",
+    "moment": "^2.24.0",
     "superagent": "^4.1.0",
     "winston": "^3.2.1"
   },
@@ -73,6 +74,7 @@
     "@types/express-jwt": "^0.0.41",
     "@types/graphql": "^14.0.7",
     "@types/jsonwebtoken": "^8.3.2",
+    "@types/moment": "^2.13.0",
     "@types/nock": "^9.3.1",
     "@types/node": "^10.11.2",
     "@types/superagent": "^4.1.1",

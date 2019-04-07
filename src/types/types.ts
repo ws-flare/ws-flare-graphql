@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import {gql} from 'apollo-server-express';
 
 export const typeDefs = gql`
     type User {
@@ -39,7 +39,7 @@ export const typeDefs = gql`
         passed: Boolean
         usages: [Usage]
         nodes: [Node]
-        sockets: [Socket]
+        connectedSocketTimeFrame: ConnectedSocketTick
     }
     
     type Node {
@@ -81,6 +81,18 @@ export const typeDefs = gql`
         timeToConnection: Int
     }
     
+    type ConnectedSocketTick {
+        jobId: String
+        gt: String!
+        lt: String!
+        tick: Int!
+        connectedSocketCount: ConnectedSocketCount
+    }
+    
+    type ConnectedSocketCount {
+        count: Int!
+    }
+    
     type Query {
         users: [User]
         
@@ -99,6 +111,9 @@ export const typeDefs = gql`
         usages(jobId: String!): [Usage]
         
         sockets(jobId: String!): [Socket]
+        
+        # Connected Sockets
+        connectedSocketTimeFrame(jobId: String! tickSeconds: Int!): [ConnectedSocketTick]
     }
     
     type Mutation {

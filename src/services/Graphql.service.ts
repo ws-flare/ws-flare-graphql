@@ -1,17 +1,18 @@
-import { IResolvers } from "graphql-tools";
-import { inject } from "@loopback/core";
-import { UserService } from './User.service';
-import { User } from '../models/User.model';
-import { ProjectsService } from './Projects.service';
-import { Project } from '../models/Project.model';
-import { Context } from '../models/Context.model';
-import { Task } from '../models/Task.model';
-import { TasksService } from './Tasks.service';
-import { JobsService } from './Jobs.service';
-import { NodesService } from './Nodes.service';
-import { MonitorService } from './monitor.service';
-import { Job } from '../models/Job.model';
-import { SocketsService } from './sockets.service';
+import {IResolvers} from "graphql-tools";
+import {inject} from "@loopback/core";
+import {UserService} from './User.service';
+import {User} from '../models/User.model';
+import {ProjectsService} from './Projects.service';
+import {Project} from '../models/Project.model';
+import {Context} from '../models/Context.model';
+import {Task} from '../models/Task.model';
+import {TasksService} from './Tasks.service';
+import {JobsService} from './Jobs.service';
+import {NodesService} from './Nodes.service';
+import {MonitorService} from './monitor.service';
+import {Job} from '../models/Job.model';
+import {SocketsService} from './sockets.service';
+import {ConnectedSocketTick} from '../models/socket.model';
 
 export class GraphqlService {
 
@@ -69,7 +70,11 @@ export class GraphqlService {
 
                 sockets: (_: null, args: { jobId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.socketsService.getSockets(args.jobId) : [];
-                }
+                },
+
+                connectedSocketTimeFrame: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
+                    return ctx.authenticated ? this.socketsService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
+                },
             },
 
             Project: {
@@ -85,7 +90,13 @@ export class GraphqlService {
 
                 usages: (job: Job) => this.monitorService.getUsages(job.id),
 
-                sockets: (job: Job) => this.socketsService.getSockets(job.id)
+                connectedSocketTimeFrame: (job: Job) => this.socketsService.getTicksWithinTimeFrame(job.id, 10)
+            },
+
+            ConnectedSocketTick: {
+                connectedSocketCount: (tick: ConnectedSocketTick) => {
+                    return this.socketsService.getTotalConnectedSocketsWithinTick(tick.jobId, tick.gt, tick.lt)
+                }
             },
 
             Mutation: {

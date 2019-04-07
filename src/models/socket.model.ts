@@ -1,11 +1,11 @@
-export interface Socket {
-    id?: string;
+export interface ConnectedSocketTick {
     jobId: string;
-    connected?: boolean;
-    disconnected?: boolean;
-    hasError?: boolean;
-    connectionTime?: Date;
-    disconnectTime?: Date;
-    errorTime?: Date;
-    timeToConnection?: string;
+    gt: string;
+    lt: string;
+    tick: number;
+    socketCount?: ConnectedSocketCount;
+}
+
+export interface ConnectedSocketCount {
+    count: number;
 }
