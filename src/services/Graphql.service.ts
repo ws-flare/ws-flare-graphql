@@ -11,6 +11,7 @@ import { JobsService } from './Jobs.service';
 import { NodesService } from './Nodes.service';
 import { MonitorService } from './monitor.service';
 import { Job } from '../models/Job.model';
+import { SocketsService } from './sockets.service';
 
 export class GraphqlService {
 
@@ -31,6 +32,9 @@ export class GraphqlService {
 
     @inject('services.monitor')
     private monitorService: MonitorService;
+
+    @inject('services.sockets')
+    private socketsService: SocketsService;
 
     getResolvers(): IResolvers {
         return {
@@ -61,6 +65,10 @@ export class GraphqlService {
 
                 usages: (_: null, args: { jobId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.monitorService.getUsages(args.jobId) : [];
+                },
+
+                sockets: (_: null, args: { jobId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.socketsService.getSockets(args.jobId) : [];
                 }
             },
 
@@ -76,6 +84,8 @@ export class GraphqlService {
                 nodes: (job: Job) => this.nodesService.getNodes(job.id),
 
                 usages: (job: Job) => this.monitorService.getUsages(job.id),
+
+                sockets: (job: Job) => this.socketsService.getSockets(job.id)
             },
 
             Mutation: {

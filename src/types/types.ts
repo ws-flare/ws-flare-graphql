@@ -39,6 +39,7 @@ export const typeDefs = gql`
         passed: Boolean
         usages: [Usage]
         nodes: [Node]
+        sockets: [Socket]
     }
     
     type Node {
@@ -68,6 +69,18 @@ export const typeDefs = gql`
         name: String!
     }
     
+    type Socket {
+        id: String!
+        jobId: String!
+        connected: Boolean
+        disconnected: Boolean
+        hasError: Boolean
+        connectionTime: String
+        disconnectTime: String
+        errorTime: String
+        timeToConnection: Int
+    }
+    
     type Query {
         users: [User]
         
@@ -84,6 +97,8 @@ export const typeDefs = gql`
         nodes(jobId: String!): [Node]
         
         usages(jobId: String!): [Usage]
+        
+        sockets(jobId: String!): [Socket]
     }
     
     type Mutation {
