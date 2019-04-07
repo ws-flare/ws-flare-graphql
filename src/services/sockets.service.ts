@@ -65,7 +65,7 @@ export class SocketsService {
 
     async getTicksWithinTimeFrame(jobId: string, tickSeconds: number): Promise<ConnectedSocketTick[]> {
         this.logger.info('in getTicksWithinTimeFrame');
-        const max = await this.getMaxConnectedSocketsDate(jobId);
+        let max = await this.getMaxConnectedSocketsDate(jobId);
         let min = await this.getMinConnectedSocketsDate(jobId);
 
         this.logger.info(`Max: ${max}`);
@@ -73,14 +73,15 @@ export class SocketsService {
 
         let socketTicks: ConnectedSocketTick[] = [];
         let tickCount = 0;
+        let slider = min;
 
-        while (moment(min).isBefore(max)) {
-            const tick = moment(min).add(tickSeconds, 's').toISOString();
+        while (moment(slider).isBefore(max)) {
+            const tick = moment(slider).add(tickSeconds, 's').toISOString();
 
             socketTicks.push({jobId, gt: min, lt: tick, tick: tickCount});
 
             tickCount += tickSeconds;
-            min = tick;
+            slider = tick;
         }
 
         this.logger.info(socketTicks);

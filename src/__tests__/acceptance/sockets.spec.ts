@@ -121,7 +121,7 @@ describe('Sockets', () => {
         expect(response.data.sockets[1].timeToConnection).to.equal(5000);
     });
 
-    it('should get socket ticks between time frames', async () => {
+    it.only('should get socket ticks between time frames', async () => {
         nock(`${apis.jobsApi}`)
             .filteringPath(() => '/sockets')
             .get('/sockets')
@@ -171,7 +171,7 @@ describe('Sockets', () => {
             },
             {
                 __typename: "ConnectedSocketTick",
-                gt: '2019-04-07T11:51:32.000Z',
+                gt: '2019-04-07T11:51:22.000Z',
                 lt: '2019-04-07T11:51:42.000Z',
                 tick: 10,
                 connectedSocketCount: {
@@ -181,7 +181,7 @@ describe('Sockets', () => {
             },
             {
                 __typename: "ConnectedSocketTick",
-                gt: '2019-04-07T11:51:42.000Z',
+                gt: '2019-04-07T11:51:22.000Z',
                 lt: '2019-04-07T11:51:52.000Z',
                 tick: 20,
                 connectedSocketCount: {
@@ -191,7 +191,7 @@ describe('Sockets', () => {
             },
             {
                 __typename: "ConnectedSocketTick",
-                gt: '2019-04-07T11:51:52.000Z',
+                gt: '2019-04-07T11:51:22.000Z',
                 lt: '2019-04-07T11:52:02.000Z',
                 tick: 30,
                 connectedSocketCount: {
@@ -201,7 +201,7 @@ describe('Sockets', () => {
             },
             {
                 __typename: "ConnectedSocketTick",
-                gt: '2019-04-07T11:52:02.000Z',
+                gt: '2019-04-07T11:51:22.000Z',
                 lt: '2019-04-07T11:52:12.000Z',
                 tick: 40,
                 connectedSocketCount: {
@@ -211,7 +211,7 @@ describe('Sockets', () => {
             },
             {
                 __typename: "ConnectedSocketTick",
-                gt: '2019-04-07T11:52:12.000Z',
+                gt: '2019-04-07T11:51:22.000Z',
                 lt: '2019-04-07T11:52:22.000Z',
                 tick: 50,
                 connectedSocketCount: {
