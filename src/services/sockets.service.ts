@@ -55,10 +55,6 @@ export class SocketsService {
             jobId,
             connected: true,
             connectionTime: {neq: null},
-            and: [
-                {connectionTime: {gte}},
-                {connectionTime: {lte}}
-            ],
             or: [
                 {
                     and: [
