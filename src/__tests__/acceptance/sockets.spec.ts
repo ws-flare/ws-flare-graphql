@@ -121,7 +121,7 @@ describe('Sockets', () => {
         expect(response.data.sockets[1].timeToConnection).to.equal(5000);
     });
 
-    it.only('should get socket ticks between time frames', async () => {
+    it('should get socket ticks between time frames', async () => {
         nock(`${apis.jobsApi}`)
             .filteringPath(() => '/sockets')
             .get('/sockets')
