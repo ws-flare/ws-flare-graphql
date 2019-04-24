@@ -111,7 +111,7 @@ export class MonitorService {
     async getApps(jobId: string, gt: string, lt: string) {
         let res = await get(`${this.monitorApi}/usages?filter=${JSON.stringify({
             where: {jobId},
-            fields: {appId: true}
+            fields: {id: true, appId: true, name: true}
         })}`);
 
         return uniqBy(res.body, 'appId').map(app => ({...app, gt, lt}));
