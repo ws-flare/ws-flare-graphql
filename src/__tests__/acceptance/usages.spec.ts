@@ -170,4 +170,203 @@ describe('Usages', () => {
         expect(response.data.usages[2].name).to.equal('app1');
     });
 
+    it('should get usages within time frame', async () => {
+        nock(`${apis.monitorApi}`)
+            .filteringPath(() => '/usages')
+            .get('/usages')
+            .once()
+            .reply(200, [{createdAt: '2019-04-07T11:52:22.000Z'}]);
+
+        nock(`${apis.monitorApi}`)
+            .filteringPath(() => '/usages')
+            .get('/usages')
+            .once()
+            .reply(200, [{createdAt: '2019-04-07T11:51:22.000Z'}]);
+
+        nock(`${apis.monitorApi}`)
+            .filteringPath(() => '/usages')
+            .get('/usages')
+            .times(6)
+            .reply(200, [{
+                id: 'usage1',
+                jobId: 'job1-id',
+                appId: 'app1-id',
+                mem: 1024,
+                cpu: 2056,
+                disk: 6008,
+                mem_quota: 2056,
+                disk_quota: 50077,
+                instance: 0,
+                time: '2014-06-19 22:37:58 +0000',
+                state: 'RUNNING',
+                uptime: 9002,
+                name: 'app1'
+            }]);
+
+        const query = gql`
+                query usageTicks($jobId: String! $tickSeconds: Int!) {
+                  usageTicks(jobId: $jobId tickSeconds: $tickSeconds) {
+                    gt
+                    lt
+                    tick
+                    usage {
+                        id
+                        jobId
+                        appId
+                        mem
+                        cpu
+                        disk
+                        mem_quota
+                        disk_quota
+                        instance
+                        time
+                        state
+                        uptime
+                        name
+                    }
+                  }
+                }
+            `;
+
+        const response = await client.query({
+            query,
+            variables: {jobId: 'job1', tickSeconds: 10}
+        });
+
+        expect(response.data.usageTicks).to.eql([
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:51:32.000Z',
+                tick: 0,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            },
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:51:42.000Z',
+                tick: 10,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            },
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:51:52.000Z',
+                tick: 20,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            },
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:52:02.000Z',
+                tick: 30,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            },
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:52:12.000Z',
+                tick: 40,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            },
+            {
+                __typename: "UsageTick",
+                gt: '2019-04-07T11:51:22.000Z',
+                lt: '2019-04-07T11:52:22.000Z',
+                tick: 50,
+                usage: {
+                    __typename: 'Usage',
+                    id: 'usage1',
+                    jobId: 'job1-id',
+                    appId: 'app1-id',
+                    mem: 1024,
+                    cpu: 2056,
+                    disk: 6008,
+                    mem_quota: 2056,
+                    disk_quota: 50077,
+                    instance: 0,
+                    time: '2014-06-19 22:37:58 +0000',
+                    state: 'RUNNING',
+                    uptime: 9002,
+                    name: 'app1'
+                }
+            }
+        ]);
+    });
+
 });

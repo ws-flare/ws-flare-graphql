@@ -1,4 +1,4 @@
-import {gql} from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
     type User {
@@ -83,7 +83,7 @@ export const typeDefs = gql`
     }
     
     type ConnectedSocketTick {
-        jobId: String
+        jobId: String!
         gt: String!
         lt: String!
         tick: Int!
@@ -92,6 +92,14 @@ export const typeDefs = gql`
     
     type ConnectedSocketCount {
         count: Int!
+    }
+    
+    type UsageTick {
+        jobId: String!
+        gt: String!
+        lt: String!
+        tick: Int!
+        usage: Usage
     }
     
     type Query {
@@ -115,6 +123,9 @@ export const typeDefs = gql`
         
         # Connected Sockets
         connectedSocketTimeFrame(jobId: String! tickSeconds: Int!): [ConnectedSocketTick]
+        
+        # Usage Ticks
+        usageTicks(jobId: String! tickSeconds: Int!): [UsageTick]
     }
     
     type Mutation {
