@@ -113,14 +113,14 @@ export class GraphqlService {
             },
 
             CfApp: {
-                instances: ({id, gt, lt}: CfApp, args: { jobId: string }) => {
-                    return this.monitorService.getInstances(args.jobId, id, gt, lt)
+                instances: ({id, jobId, gt, lt}: CfApp) => {
+                    return this.monitorService.getInstances(jobId, id, gt, lt)
                 }
             },
 
             Instance: {
-                usage: ({appId, instance, gt, lt}: Instance, args: { jobId: string }) => {
-                    return this.monitorService.getMaxUsageWithinTick(args.jobId, appId, instance, gt, lt)
+                usage: ({jobId, appId, instance, gt, lt}: Instance) => {
+                    return this.monitorService.getMaxUsageWithinTick(jobId, appId, instance, gt, lt)
                 }
             },
 

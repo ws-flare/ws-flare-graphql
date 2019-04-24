@@ -8,6 +8,7 @@ export interface UsageTick {
 
 export interface CfApp {
     id: string;
+    jobId: string;
     name: string;
     gt: string;
     lt: string;
@@ -15,6 +16,7 @@ export interface CfApp {
 }
 
 export interface Instance {
+    jobId: string;
     appId: string;
     instance: number;
     gt: string;

@@ -114,7 +114,7 @@ export class MonitorService {
             fields: {id: true, appId: true, name: true}
         })}`);
 
-        return uniqBy(res.body, 'appId').map(app => ({...app, gt, lt}));
+        return uniqBy(res.body, 'appId').map(app => ({...app, jobId, gt, lt}));
     }
 
     async getInstances(jobId: string, appId: string, gt: string, lt: string) {
@@ -123,6 +123,6 @@ export class MonitorService {
             fields: {instance: true}
         })}`);
 
-        return uniqBy(res.body, 'instance').map(instance => ({...instance, appId, gt, lt}));
+        return uniqBy(res.body, 'instance').map(instance => ({...instance, jobId, appId, gt, lt}));
     }
 }

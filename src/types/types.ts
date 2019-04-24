@@ -64,6 +64,7 @@ export const typeDefs = gql`
     }
     
     type CfApp {
+        jobId: String!
         appId: String!
         name: String!
         gt: String!
@@ -72,6 +73,7 @@ export const typeDefs = gql`
     }
     
     type Instance {
+        jobId: String!
         appId: String!
         instance: Int!
         gt: String!
