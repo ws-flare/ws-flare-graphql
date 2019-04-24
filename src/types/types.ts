@@ -40,6 +40,7 @@ export const typeDefs = gql`
         usages: [Usage]
         nodes: [Node]
         connectedSocketTimeFrame: [ConnectedSocketTick]
+        usageTicks: [UsageTick]
         sockets: [Socket]
     }
     
