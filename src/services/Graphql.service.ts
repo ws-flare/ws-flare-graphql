@@ -1,18 +1,19 @@
-import {IResolvers} from "graphql-tools";
-import {inject} from "@loopback/core";
-import {UserService} from './User.service';
-import {User} from '../models/User.model';
-import {ProjectsService} from './Projects.service';
-import {Project} from '../models/Project.model';
-import {Context} from '../models/Context.model';
-import {Task} from '../models/Task.model';
-import {TasksService} from './Tasks.service';
-import {JobsService} from './Jobs.service';
-import {NodesService} from './Nodes.service';
-import {MonitorService} from './monitor.service';
-import {Job} from '../models/Job.model';
-import {SocketsService} from './sockets.service';
-import {ConnectedSocketTick} from '../models/socket.model';
+import { IResolvers } from "graphql-tools";
+import { inject } from "@loopback/core";
+import { UserService } from './User.service';
+import { User } from '../models/User.model';
+import { ProjectsService } from './Projects.service';
+import { Project } from '../models/Project.model';
+import { Context } from '../models/Context.model';
+import { Task } from '../models/Task.model';
+import { TasksService } from './Tasks.service';
+import { JobsService } from './Jobs.service';
+import { NodesService } from './Nodes.service';
+import { MonitorService } from './monitor.service';
+import { Job } from '../models/Job.model';
+import { SocketsService } from './sockets.service';
+import { ConnectedSocketTick } from '../models/socket.model';
+import { UsageTick } from '../models/usage.model';
 
 export class GraphqlService {
 
@@ -75,6 +76,10 @@ export class GraphqlService {
                 connectedSocketTimeFrame: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
                     return ctx.authenticated ? this.socketsService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
                 },
+
+                usageTicks: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
+                    return ctx.authenticated ? this.monitorService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
+                }
             },
 
             Project: {
@@ -96,6 +101,12 @@ export class GraphqlService {
             ConnectedSocketTick: {
                 connectedSocketCount: (tick: ConnectedSocketTick) => {
                     return this.socketsService.getTotalConnectedSocketsWithinTick(tick.jobId, tick.gt, tick.lt)
+                }
+            },
+
+            UsageTick: {
+                usage: (tick: UsageTick) => {
+                    return this.monitorService.getMaxUsageWithinTick(tick.jobId, tick.gt, tick.lt)
                 }
             },
 

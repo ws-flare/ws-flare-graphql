@@ -1,3 +1,11 @@
+export interface UsageTick {
+    jobId: string;
+    gt: string;
+    lt: string;
+    tick: number;
+    usage?: Usage;
+}
+
 export interface Usage {
     id: string;
     jobId: string;
