@@ -40,7 +40,7 @@ export class MonitorService {
             fields: {createdAt: true}
         };
 
-        let res = await get(`${this.monitorApi}/sockets?filter=${JSON.stringify(filter)}`);
+        let res = await get(`${this.monitorApi}/usages?filter=${JSON.stringify(filter)}`);
 
         return res.body.length === 1 ? res.body[0].createdAt : null;
     }
