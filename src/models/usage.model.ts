@@ -3,7 +3,23 @@ export interface UsageTick {
     gt: string;
     lt: string;
     tick: number;
-    usage?: Usage;
+    cfApps?: CfApp[];
+}
+
+export interface CfApp {
+    id: string;
+    name: string;
+    gt: string;
+    lt: string;
+    instances: Instance[]
+}
+
+export interface Instance {
+    appId: string;
+    instance: number;
+    gt: string;
+    lt: string;
+    usage: Usage
 }
 
 export interface Usage {

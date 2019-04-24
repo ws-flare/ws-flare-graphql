@@ -40,7 +40,7 @@ export const typeDefs = gql`
         usages: [Usage]
         nodes: [Node]
         connectedSocketTimeFrame: [ConnectedSocketTick]
-        usageTicks: [UsageTick]
+        appUsageTicks: [UsageTick]
         sockets: [Socket]
     }
     
@@ -53,6 +53,30 @@ export const typeDefs = gql`
         totalSuccessfulConnections: Int
         totalFailedConnections: Int
         totalDroppedConnections: Int
+    }
+    
+    type UsageTick {
+        jobId: String!
+        gt: String!
+        lt: String!
+        tick: Int!
+        cfApps: [CfApp]
+    }
+    
+    type CfApp {
+        appId: String!
+        name: String!
+        gt: String!
+        lt: String!
+        instances: [Instance]
+    }
+    
+    type Instance {
+        appId: String!
+        instance: Int!
+        gt: String!
+        lt: String!
+        usage: Usage
     }
     
     type Usage {
@@ -95,14 +119,6 @@ export const typeDefs = gql`
         count: Int!
     }
     
-    type UsageTick {
-        jobId: String!
-        gt: String!
-        lt: String!
-        tick: Int!
-        usage: Usage
-    }
-    
     type Query {
         users: [User]
         
@@ -125,8 +141,8 @@ export const typeDefs = gql`
         # Connected Sockets
         connectedSocketTimeFrame(jobId: String! tickSeconds: Int!): [ConnectedSocketTick]
         
-        # Usage Ticks
-        usageTicks(jobId: String! tickSeconds: Int!): [UsageTick]
+        # App Usage Ticks
+        appUsageTicks(jobId: String! tickSeconds: Int!): [UsageTick]
     }
     
     type Mutation {

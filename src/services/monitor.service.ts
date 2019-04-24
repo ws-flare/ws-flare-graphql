@@ -1,8 +1,8 @@
 import { inject } from '@loopback/core';
 import { get } from 'superagent';
 import { Logger } from 'winston';
+import { uniqBy } from 'lodash';
 import * as moment from 'moment';
-import { ConnectedSocketTick } from '../models/socket.model';
 import { UsageTick } from '../models/usage.model';
 
 export class MonitorService {
@@ -51,10 +51,12 @@ export class MonitorService {
         return res.body;
     }
 
-    async getMaxUsageWithinTick(jobId: string, gte: string, lte: string) {
+    async getMaxUsageWithinTick(jobId: string, appId: string, instance: number, gte: string, lte: string) {
         const filter = {
             where: {
                 jobId,
+                appId,
+                instance,
                 connected: true,
                 createdAt: {neq: null},
                 or: [
@@ -104,5 +106,23 @@ export class MonitorService {
         this.logger.info(usageTicks);
 
         return usageTicks;
+    }
+
+    async getApps(jobId: string, gt: string, lt: string) {
+        let res = await get(`${this.monitorApi}/usages?filter=${JSON.stringify({
+            where: {jobId},
+            fields: {appId: true}
+        })}`);
+
+        return uniqBy(res.body, 'appId').map(app => ({...app, gt, lt}));
+    }
+
+    async getInstances(jobId: string, appId: string, gt: string, lt: string) {
+        let res = await get(`${this.monitorApi}/usages?filter=${JSON.stringify({
+            where: {jobId, appId},
+            fields: {instance: true}
+        })}`);
+
+        return uniqBy(res.body, 'instance').map(instance => ({...instance, appId, gt, lt}));
     }
 }

@@ -13,7 +13,7 @@ import { MonitorService } from './monitor.service';
 import { Job } from '../models/Job.model';
 import { SocketsService } from './sockets.service';
 import { ConnectedSocketTick } from '../models/socket.model';
-import { UsageTick } from '../models/usage.model';
+import { CfApp, Instance, UsageTick } from '../models/usage.model';
 
 export class GraphqlService {
 
@@ -77,7 +77,7 @@ export class GraphqlService {
                     return ctx.authenticated ? this.socketsService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
                 },
 
-                usageTicks: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
+                appUsageTicks: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
                     return ctx.authenticated ? this.monitorService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
                 }
             },
@@ -97,7 +97,7 @@ export class GraphqlService {
 
                 connectedSocketTimeFrame: (job: Job) => this.socketsService.getTicksWithinTimeFrame(job.id, 10),
 
-                usageTicks: (job: Job) => this.monitorService.getTicksWithinTimeFrame(job.id, 10)
+                appUsageTicks: (job: Job) => this.monitorService.getTicksWithinTimeFrame(job.id, 10)
             },
 
             ConnectedSocketTick: {
@@ -107,8 +107,20 @@ export class GraphqlService {
             },
 
             UsageTick: {
-                usage: (tick: UsageTick) => {
-                    return this.monitorService.getMaxUsageWithinTick(tick.jobId, tick.gt, tick.lt)
+                cfApps: ({jobId, gt, lt}: UsageTick) => {
+                    return this.monitorService.getApps(jobId, gt, lt)
+                }
+            },
+
+            CfApp: {
+                instances: ({id, gt, lt}: CfApp, args: { jobId: string }) => {
+                    return this.monitorService.getInstances(args.jobId, id, gt, lt)
+                }
+            },
+
+            Instance: {
+                usage: ({appId, instance, gt, lt}: Instance, args: { jobId: string }) => {
+                    return this.monitorService.getMaxUsageWithinTick(args.jobId, appId, instance, gt, lt)
                 }
             },
 
