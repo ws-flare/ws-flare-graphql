@@ -160,10 +160,14 @@ describe('Jobs', () => {
         expect(response.data.jobs[2].passed).to.eql(false);
     });
 
-    it('should be able to get a single job', async () => {
+    it.only('should be able to get a single job', async () => {
         nock(`${apis.jobsApi}`)
             .get('/jobs/abc123')
             .reply(200, {id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
+
+        nock(`${apis.projectsApi}`)
+            .get('/tasks/task1')
+            .reply(200, {scripts: JSON.stringify([{totalSimulators: 10}, {totalSimulators: 30}])});
 
         const query = gql`
                 query job($jobId: String!) {
@@ -173,6 +177,7 @@ describe('Jobs', () => {
                     taskId
                     isRunning
                     passed
+                    totalSimulators
                   }
                 }
             `;
@@ -187,5 +192,6 @@ describe('Jobs', () => {
         expect(response.data.job.taskId).to.eql('task1');
         expect(response.data.job.isRunning).to.eql(true);
         expect(response.data.job.passed).to.eql(false);
+        expect(response.data.job.totalSimulators).to.eql(40);
     });
 });

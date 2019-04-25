@@ -3,6 +3,7 @@ import { post, get } from 'superagent';
 import { Connection } from 'amqplib';
 import { TasksService } from './Tasks.service';
 import { Logger } from 'winston';
+import { Task } from '../models/Task.model';
 
 export class JobsService {
 
@@ -52,8 +53,18 @@ export class JobsService {
     }
 
     async getJob(jobId: string) {
-        const res = await get(`${this.jobsApi}/jobs/${jobId}`);
+        const job = await get(`${this.jobsApi}/jobs/${jobId}`);
 
-        return res.body;
+        const task = await this.tasksService.getTask(job.body.taskId);
+
+        this.logger.info(task);
+
+        const scripts = JSON.parse(task.scripts);
+
+        this.logger.info(scripts);
+
+        const totalSimulators = scripts.reduce((a: any, b: any) => a.totalSimulators + b.totalSimulators)
+
+        return {...job.body, totalSimulators};
     }
 }

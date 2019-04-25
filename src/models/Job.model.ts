@@ -5,4 +5,5 @@ export interface Job {
     taskId: string;
     isRunning: boolean;
     passed: boolean;
+    totalSimulators: number;
 }

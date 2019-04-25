@@ -42,6 +42,7 @@ export const typeDefs = gql`
         connectedSocketTimeFrame: [ConnectedSocketTick]
         appUsageTicks: [UsageTick]
         sockets: [Socket]
+        totalSimulators: Int!
     }
     
     type Node {
