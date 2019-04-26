@@ -1,15 +1,15 @@
 import "isomorphic-fetch";
-import { gql } from 'apollo-server-express';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {gql} from 'apollo-server-express';
+import {ApolloClient} from 'apollo-client';
+import {createHttpLink} from 'apollo-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 import * as nock from 'nock';
-import { expect } from 'chai';
-import { setContext } from 'apollo-link-context';
-import { main } from '../..';
-import { GraphqlApplication } from '../../application';
-import { apis, Container, getAMQPConn, startMqContainer } from '../test-helpers';
-import { Channel, Connection, ConsumeMessage } from 'amqplib';
+import {expect} from 'chai';
+import {setContext} from 'apollo-link-context';
+import {main} from '../..';
+import {GraphqlApplication} from '../../application';
+import {apis, Container, getAMQPConn, startMqContainer} from '../test-helpers';
+import {Channel, Connection, ConsumeMessage} from 'amqplib';
 
 describe('Jobs', () => {
 
@@ -160,14 +160,14 @@ describe('Jobs', () => {
         expect(response.data.jobs[2].passed).to.eql(false);
     });
 
-    it.only('should be able to get a single job', async () => {
+    it('should be able to get a single job', async () => {
         nock(`${apis.jobsApi}`)
             .get('/jobs/abc123')
             .reply(200, {id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
 
         nock(`${apis.projectsApi}`)
             .get('/tasks/task1')
-            .reply(200, {scripts: JSON.stringify([{totalSimulators: 10}, {totalSimulators: 30}])});
+            .reply(200, {scripts: JSON.stringify([{totalSimulators: 10}])});
 
         const query = gql`
                 query job($jobId: String!) {
@@ -192,6 +192,37 @@ describe('Jobs', () => {
         expect(response.data.job.taskId).to.eql('task1');
         expect(response.data.job.isRunning).to.eql(true);
         expect(response.data.job.passed).to.eql(false);
-        expect(response.data.job.totalSimulators).to.eql(40);
+        expect(response.data.job.totalSimulators).to.eql(10);
+    });
+
+    it('should be able to sum up multiple simulators', async () => {
+        nock(`${apis.jobsApi}`)
+            .get('/jobs/abc123')
+            .reply(200, {id: 'job1', userId: 'user1', taskId: 'task1', isRunning: true, passed: false});
+
+        nock(`${apis.projectsApi}`)
+            .get('/tasks/task1')
+            .reply(200, {
+                scripts: JSON.stringify([
+                    {totalSimulators: 10},
+                    {totalSimulators: 55},
+                    {totalSimulators: 30}
+                ])
+            });
+
+        const query = gql`
+                query job($jobId: String!) {
+                  job(jobId: $jobId) {
+                    totalSimulators
+                  }
+                }
+            `;
+
+        const response = await client.query({
+            query,
+            variables: {jobId: 'abc123'}
+        });
+
+        expect(response.data.job.totalSimulators).to.eql(95);
     });
 });

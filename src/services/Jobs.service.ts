@@ -1,9 +1,8 @@
-import { inject } from '@loopback/core';
-import { post, get } from 'superagent';
-import { Connection } from 'amqplib';
-import { TasksService } from './Tasks.service';
-import { Logger } from 'winston';
-import { Task } from '../models/Task.model';
+import {inject} from '@loopback/core';
+import {post, get} from 'superagent';
+import {Connection} from 'amqplib';
+import {TasksService} from './Tasks.service';
+import {Logger} from 'winston';
 
 export class JobsService {
 
@@ -63,7 +62,9 @@ export class JobsService {
 
         this.logger.info(scripts);
 
-        const totalSimulators = scripts.reduce((a: any, b: any) => a.totalSimulators + b.totalSimulators)
+        let totalSimulators = 0;
+
+        scripts.forEach((script: any) => totalSimulators += script.totalSimulators);
 
         return {...job.body, totalSimulators};
     }
