@@ -89,8 +89,8 @@ export const typeDefs = gql`
         mem: Float!
         cpu: Float!
         disk: Float!
-        mem_quota: Int!
-        disk_quota: Int!
+        mem_quota: Float!
+        disk_quota: Float!
         instance: Int!
         time: String!
         state: String!

@@ -48,7 +48,7 @@ describe('Usages', () => {
         nock.activate();
     });
 
-    it.only('should get a list of cf usages in a job', async () => {
+    it('should get a list of cf usages in a job', async () => {
         nock(`${apis.monitorApi}`)
             .filteringPath(() => '/usages')
             .get('/usages')
