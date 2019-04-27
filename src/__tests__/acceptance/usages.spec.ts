@@ -48,7 +48,7 @@ describe('Usages', () => {
         nock.activate();
     });
 
-    it('should get a list of cf usages in a job', async () => {
+    it.only('should get a list of cf usages in a job', async () => {
         nock(`${apis.monitorApi}`)
             .filteringPath(() => '/usages')
             .get('/usages')
@@ -57,11 +57,11 @@ describe('Usages', () => {
                     id: 'usage1',
                     jobId: 'job1-id',
                     appId: 'app1-id',
-                    mem: 10.56,
+                    mem: 317297899010,
                     cpu: 0.23,
                     disk: 70.55,
-                    mem_quota: 2056,
-                    disk_quota: 50077,
+                    mem_quota: 317297899910,
+                    disk_quota: 417297899560,
                     instance: 0,
                     time: '2014-06-19 22:37:58 +0000',
                     state: 'RUNNING',
@@ -130,11 +130,11 @@ describe('Usages', () => {
         expect(response.data.usages[0].id).to.equal('usage1');
         expect(response.data.usages[0].jobId).to.equal('job1-id');
         expect(response.data.usages[0].appId).to.equal('app1-id');
-        expect(response.data.usages[0].mem).to.equal(10.56);
+        expect(response.data.usages[0].mem).to.equal(317297899010);
         expect(response.data.usages[0].cpu).to.equal(0.23);
         expect(response.data.usages[0].disk).to.equal(70.55);
-        expect(response.data.usages[0].mem_quota).to.equal(2056);
-        expect(response.data.usages[0].disk_quota).to.equal(50077);
+        expect(response.data.usages[0].mem_quota).to.equal(317297899910);
+        expect(response.data.usages[0].disk_quota).to.equal(417297899560);
         expect(response.data.usages[0].instance).to.equal(0);
         expect(response.data.usages[0].time).to.equal('2014-06-19 22:37:58 +0000');
         expect(response.data.usages[0].state).to.equal('RUNNING');
