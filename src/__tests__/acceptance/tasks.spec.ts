@@ -50,7 +50,19 @@ describe('Tasks', () => {
 
     it('should create a new task', async () => {
         nock(`${apis.projectsApi}`)
-            .post('/tasks')
+            .post('/tasks', {
+                userId: 'abc123',
+                projectId: 'project1',
+                name: 'task1',
+                cfApi: 'http://cf.com',
+                cfUser: 'user1',
+                cfPass: 'pass1',
+                cfOrg: 'org1',
+                cfSpace: 'space1',
+                cfApps: 'app1,app2,app3',
+                successThreshold: 80,
+                scripts: JSON.stringify([{start: 0}, {start: 30}])
+            })
             .reply(200, {
                 id: 'abc123',
                 userId: 'user1',

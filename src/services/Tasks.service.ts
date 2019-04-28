@@ -1,6 +1,6 @@
-import { inject } from '@loopback/core';
-import { post, get, put } from 'superagent';
-import { Task } from '../models/Task.model';
+import {inject} from '@loopback/core';
+import {post, get, put} from 'superagent';
+import {Task} from '../models/Task.model';
 
 export class TasksService {
 
