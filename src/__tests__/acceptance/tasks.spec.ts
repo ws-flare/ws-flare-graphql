@@ -1,14 +1,14 @@
 import "isomorphic-fetch";
-import { gql } from 'apollo-server-express';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {gql} from 'apollo-server-express';
+import {ApolloClient} from 'apollo-client';
+import {createHttpLink} from 'apollo-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 import * as nock from 'nock';
-import { expect } from 'chai';
-import { setContext } from 'apollo-link-context';
-import { main } from '../..';
-import { GraphqlApplication } from '../../application';
-import { apis, Container, startMqContainer } from '../test-helpers';
+import {expect} from 'chai';
+import {setContext} from 'apollo-link-context';
+import {main} from '../..';
+import {GraphqlApplication} from '../../application';
+import {apis, Container, startMqContainer} from '../test-helpers';
 
 describe('Tasks', () => {
 
@@ -62,12 +62,13 @@ describe('Tasks', () => {
                 cfOrg: 'org1',
                 cfSpace: 'space1',
                 cfApps: 'app1,app2,app3',
+                successThreshold: 80,
                 scripts: JSON.stringify([{start: 0}, {start: 30}])
             });
 
         const mutation = gql`
-                mutation createTask($projectId: String! $name: String! $cfApi: String! $cfUser: String! $cfPass: String! $cfOrg: String! $cfSpace: String! $cfApps: String! $scripts: String!) {
-                  createTask(projectId: $projectId name: $name cfApi: $cfApi cfUser: $cfUser cfPass: $cfPass cfOrg: $cfOrg cfSpace: $cfSpace cfApps: $cfApps scripts: $scripts) {
+                mutation createTask($projectId: String! $name: String! $cfApi: String! $cfUser: String! $cfPass: String! $cfOrg: String! $cfSpace: String! $cfApps: String! $successThreshold: Int! $scripts: String!) {
+                  createTask(projectId: $projectId name: $name cfApi: $cfApi cfUser: $cfUser cfPass: $cfPass cfOrg: $cfOrg cfSpace: $cfSpace cfApps: $cfApps successThreshold: $successThreshold scripts: $scripts) {
                     id
                     userId
                     projectId
@@ -78,6 +79,7 @@ describe('Tasks', () => {
                     cfOrg
                     cfSpace
                     cfApps
+                    successThreshold
                     scripts
                   }
                 }
@@ -94,6 +96,7 @@ describe('Tasks', () => {
                 cfOrg: 'org1',
                 cfSpace: 'space1',
                 cfApps: 'app1,app2,app3',
+                successThreshold: 80,
                 scripts: JSON.stringify([{start: 0}, {start: 30}])
             }
         });
@@ -108,6 +111,7 @@ describe('Tasks', () => {
         expect(response.data.createTask.cfOrg).to.eql('org1');
         expect(response.data.createTask.cfSpace).to.eql('space1');
         expect(response.data.createTask.cfApps).to.eql('app1,app2,app3');
+        expect(response.data.createTask.successThreshold).to.eql(80);
         expect(JSON.parse(response.data.createTask.scripts)).to.eql([{start: 0}, {start: 30}]);
     });
 
@@ -127,6 +131,7 @@ describe('Tasks', () => {
                     cfOrg: 'org1',
                     cfSpace: 'space1',
                     cfApps: 'app1,app2,app3',
+                    successThreshold: 70,
                     scripts: JSON.stringify([{start: 0}])
                 },
                 {
@@ -140,6 +145,7 @@ describe('Tasks', () => {
                     cfOrg: 'org2',
                     cfSpace: 'space2',
                     cfApps: 'app1,app2,app3',
+                    successThreshold: 80,
                     scripts: JSON.stringify([{start: 30}])
                 }
             ]);
@@ -157,6 +163,7 @@ describe('Tasks', () => {
                     cfOrg
                     cfSpace
                     cfApps
+                    successThreshold
                     scripts
                   }
                 }
@@ -181,6 +188,7 @@ describe('Tasks', () => {
         expect(response.data.tasks[0].cfOrg).to.eql('org1');
         expect(response.data.tasks[0].cfSpace).to.eql('space1');
         expect(response.data.tasks[0].cfApps).to.eql('app1,app2,app3');
+        expect(response.data.tasks[0].successThreshold).to.eql(70);
         expect(JSON.parse(response.data.tasks[0].scripts)).to.eql([{start: 0}]);
 
         expect(response.data.tasks[1].id).to.eql('abc2');
@@ -193,6 +201,7 @@ describe('Tasks', () => {
         expect(response.data.tasks[1].cfOrg).to.eql('org2');
         expect(response.data.tasks[1].cfSpace).to.eql('space2');
         expect(response.data.tasks[1].cfApps).to.eql('app1,app2,app3');
+        expect(response.data.tasks[1].successThreshold).to.eql(80);
         expect(JSON.parse(response.data.tasks[1].scripts)).to.eql([{start: 30}]);
     });
 

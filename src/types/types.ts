@@ -26,6 +26,7 @@ export const typeDefs = gql`
         cfOrg: String!
         cfSpace: String!
         cfApps: String!
+        successThreshold: Int!
         scripts: String!
         jobs: [Job]
     }
@@ -157,7 +158,7 @@ export const typeDefs = gql`
         createProject(name: String!): Project
         
         # Tasks
-        createTask(projectId: String! name: String! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String! scripts: String!): Task
+        createTask(projectId: String! name: String! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String! successThreshold: Int! scripts: String!): Task
         
         updateTask(id: String! projectId: String! name: String! cfApi: String! cfUser: String! cfPass: String! cfOrg: String! cfSpace: String! cfApps: String! scripts: String!): Task
         
