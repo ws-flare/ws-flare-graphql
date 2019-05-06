@@ -52,12 +52,10 @@ export class GraphqlServer extends Context implements Server {
                     user = verify(req.headers.authorization.replace('Bearer ', ''), this.jwtSecret);
                 }
 
-                console.log(user);
-
                 return {
                     user,
                     authenticated: user && user.userId,
-                    taskId: user.taskId
+                    taskId: (user || {}).taskId
                 }
             }
         });
