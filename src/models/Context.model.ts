@@ -3,4 +3,5 @@ export interface Context {
         userId: string;
     }
     authenticated: boolean;
+    taskId?: string;
 }

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import {gql} from 'apollo-server-express';
 
 export const typeDefs = gql`
     type User {
@@ -123,6 +123,10 @@ export const typeDefs = gql`
         count: Int!
     }
     
+    type CiToken {
+        token: String!
+    }
+    
     type Query {
         users: [User]
         
@@ -147,6 +151,9 @@ export const typeDefs = gql`
         
         # App Usage Ticks
         appUsageTicks(jobId: String! tickSeconds: Int!): [UsageTick]
+        
+        # CI Token
+        generateCiToken(taskId: String!): CiToken
     }
     
     type Mutation {
@@ -164,6 +171,8 @@ export const typeDefs = gql`
         
         # Jobs
         createJob(taskId: String!): Job
+        
+        createCiJob: Job
         
         # Nodes
         createNode(jobId: String! name: String! running: Boolean!): Node

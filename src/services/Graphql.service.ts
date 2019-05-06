@@ -1,19 +1,20 @@
-import { IResolvers } from "graphql-tools";
-import { inject } from "@loopback/core";
-import { UserService } from './User.service';
-import { User } from '../models/User.model';
-import { ProjectsService } from './Projects.service';
-import { Project } from '../models/Project.model';
-import { Context } from '../models/Context.model';
-import { Task } from '../models/Task.model';
-import { TasksService } from './Tasks.service';
-import { JobsService } from './Jobs.service';
-import { NodesService } from './Nodes.service';
-import { MonitorService } from './monitor.service';
-import { Job } from '../models/Job.model';
-import { SocketsService } from './sockets.service';
-import { ConnectedSocketTick } from '../models/socket.model';
-import { CfApp, Instance, UsageTick } from '../models/usage.model';
+import {IResolvers} from "graphql-tools";
+import {inject} from "@loopback/core";
+import {UserService} from './User.service';
+import {User} from '../models/User.model';
+import {ProjectsService} from './Projects.service';
+import {Project} from '../models/Project.model';
+import {Context} from '../models/Context.model';
+import {Task} from '../models/Task.model';
+import {TasksService} from './Tasks.service';
+import {JobsService} from './Jobs.service';
+import {NodesService} from './Nodes.service';
+import {MonitorService} from './monitor.service';
+import {Job} from '../models/Job.model';
+import {SocketsService} from './sockets.service';
+import {ConnectedSocketTick} from '../models/socket.model';
+import {CfApp, Instance, UsageTick} from '../models/usage.model';
+import {TokenService} from './token.service';
 
 export class GraphqlService {
 
@@ -37,6 +38,9 @@ export class GraphqlService {
 
     @inject('services.sockets')
     private socketsService: SocketsService;
+
+    @inject('services.token')
+    private tokenService: TokenService;
 
     getResolvers(): IResolvers {
         return {
@@ -79,6 +83,10 @@ export class GraphqlService {
 
                 appUsageTicks: (_: null, args: { jobId: string, tickSeconds: number }, ctx: Context) => {
                     return ctx.authenticated ? this.monitorService.getTicksWithinTimeFrame(args.jobId, args.tickSeconds) : [];
+                },
+
+                generateCiToken: (_: null, args: { taskId: string }, ctx: Context) => {
+                    return ctx.authenticated ? this.tokenService.generateCiToken(ctx.user.userId, args.taskId) : [];
                 }
             },
 
@@ -147,6 +155,10 @@ export class GraphqlService {
                 // Jobs
                 createJob: (_: null, args: { taskId: string }, ctx: Context) => {
                     return ctx.authenticated ? this.jobsService.createJob(ctx.user.userId, args.taskId) : null;
+                },
+
+                createCiJob: (_: null, {}, ctx: Context) => {
+                    return ctx.authenticated && ctx.taskId ? this.jobsService.createJob(ctx.user.userId, ctx.taskId) : null;
                 },
 
                 // Nodes

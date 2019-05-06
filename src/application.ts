@@ -1,15 +1,16 @@
-import { Application, ApplicationConfig } from '@loopback/core';
-import { createLogger, transports } from 'winston';
-import { connect } from 'amqplib';
-import { GraphqlServer } from './graphql.server';
-import { GraphqlService } from './services/Graphql.service';
-import { UserService } from './services/User.service';
-import { ProjectsService } from './services/Projects.service';
-import { TasksService } from './services/Tasks.service';
-import { JobsService } from './services/Jobs.service';
-import { NodesService } from './services/Nodes.service';
-import { MonitorService } from './services/monitor.service';
-import { SocketsService } from './services/sockets.service';
+import {Application, ApplicationConfig} from '@loopback/core';
+import {createLogger, transports} from 'winston';
+import {connect} from 'amqplib';
+import {GraphqlServer} from './graphql.server';
+import {GraphqlService} from './services/Graphql.service';
+import {UserService} from './services/User.service';
+import {ProjectsService} from './services/Projects.service';
+import {TasksService} from './services/Tasks.service';
+import {JobsService} from './services/Jobs.service';
+import {NodesService} from './services/Nodes.service';
+import {MonitorService} from './services/monitor.service';
+import {SocketsService} from './services/sockets.service';
+import {TokenService} from './services/token.service';
 
 export class GraphqlApplication extends Application {
 
@@ -44,6 +45,7 @@ export class GraphqlApplication extends Application {
         this.bind('services.nodes').toClass(NodesService);
         this.bind('services.monitor').toClass(MonitorService);
         this.bind('services.sockets').toClass(SocketsService);
+        this.bind('services.token').toClass(TokenService);
 
         // Remote APIS
         this.bind('api.user').to(options.apis.userApi);
