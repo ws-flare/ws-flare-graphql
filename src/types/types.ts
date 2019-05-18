@@ -1,5 +1,8 @@
 import {gql} from 'apollo-server-express';
 
+/**
+ * Type definitions used by GraphQL
+ */
 export const typeDefs = gql`
     type User {
         userId: String!

@@ -4,6 +4,9 @@ import {Connection} from 'amqplib';
 import {TasksService} from './Tasks.service';
 import {Logger} from 'winston';
 
+/**
+ * Service for handling job related functionality
+ */
 export class JobsService {
 
     @inject('logger')
@@ -21,13 +24,18 @@ export class JobsService {
     @inject('services.tasks')
     private tasksService: TasksService;
 
+    /**
+     * Creates a new job
+     *
+     * @param userId - The user who created the job
+     * @param taskId - The task id the job is in
+     */
     async createJob(userId: string, taskId: string) {
         const res = await post(`${this.jobsApi}/jobs`).send({userId, taskId, isRunning: true});
 
         const task = await this.tasksService.getTask(taskId);
 
         this.logger.info(task);
-        this.logger.info('===================================');
         this.logger.info({
             taskId, job: res.body, task: {
                 ...task, scripts: JSON.parse(task.scripts)
@@ -45,12 +53,22 @@ export class JobsService {
         return res.body;
     }
 
+    /**
+     * Get a list of jobs
+     *
+     * @param taskId - Task id to filter by
+     */
     async getJobs(taskId: string) {
         const res = await get(`${this.jobsApi}/jobs?filter=${JSON.stringify({where: {taskId}})}`);
 
         return res.body;
     }
 
+    /**
+     * Gets a single job
+     *
+     * @param jobId - The id of the job to search for
+     */
     async getJob(jobId: string) {
         const job = await get(`${this.jobsApi}/jobs/${jobId}`);
 
@@ -58,6 +76,7 @@ export class JobsService {
 
         this.logger.info(task);
 
+        // Parse the script as it is stored as an encoded JSON string in the database
         const scripts = JSON.parse(task.scripts);
 
         this.logger.info(scripts);

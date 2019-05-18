@@ -9,6 +9,9 @@ import * as http from 'http';
 import { GraphqlService } from './services/Graphql.service';
 import { typeDefs } from './types/types';
 
+/**
+ * Starts the graphQL server and applies middleware
+ */
 export class GraphqlServer extends Context implements Server {
     private _listening: boolean = false;
     private server: http.Server;
@@ -42,12 +45,14 @@ export class GraphqlServer extends Context implements Server {
 
         expressServer.get('/', (req, res) => res.send({uptime: process.uptime()}));
 
+        // Create a new apollo server
         const server = new ApolloServer({
             schema: makeExecutableSchema({typeDefs, resolvers: this.graphqlService.getResolvers()}),
             playground: {},
             context: ({req}) => {
                 let user: any = null;
 
+                // Check if user is authenticated by verifying their JWT toke
                 if (req.headers && req.headers.authorization) {
                     user = verify(req.headers.authorization.replace('Bearer ', ''), this.jwtSecret);
                 }
@@ -60,13 +65,18 @@ export class GraphqlServer extends Context implements Server {
             }
         });
 
+        // Apply express server middleware
         server.applyMiddleware({app: expressServer});
 
         await new Promise((resolve) => {
+            // Start the server
             this.server = expressServer.listen(this.port, () => resolve());
         });
     }
 
+    /**
+     * Stop server when loopback shuts down
+     */
     async stop(): Promise<void> {
         await this.server.close();
     }

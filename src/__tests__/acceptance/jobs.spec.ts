@@ -11,6 +11,9 @@ import {GraphqlApplication} from '../../application';
 import {apis, Container, getAMQPConn, startMqContainer} from '../test-helpers';
 import {Channel, Connection, ConsumeMessage} from 'amqplib';
 
+/**
+ * Tests for jobs related functionality
+ */
 describe('Jobs', () => {
 
     const graphqlPort = 8000;

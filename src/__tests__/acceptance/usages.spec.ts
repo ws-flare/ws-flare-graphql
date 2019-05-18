@@ -10,6 +10,9 @@ import { main } from '../..';
 import { GraphqlApplication } from '../../application';
 import { apis, Container, startMqContainer } from '../test-helpers';
 
+/**
+ * Tests for usages related functionality
+ */
 describe('Usages', () => {
 
     const graphqlPort = 8000;

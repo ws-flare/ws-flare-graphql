@@ -12,6 +12,9 @@ import {MonitorService} from './services/monitor.service';
 import {SocketsService} from './services/sockets.service';
 import {TokenService} from './services/token.service';
 
+/**
+ * Bootstraps the loobpack server and sets up dependency injection
+ */
 export class GraphqlApplication extends Application {
 
     constructor(options: ApplicationConfig = {}) {
@@ -67,7 +70,6 @@ export class GraphqlApplication extends Application {
 
         // Channels
         this.bind('channel.job.create').to('job.create');
-
     }
 
 }

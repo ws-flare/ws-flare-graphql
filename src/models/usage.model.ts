@@ -1,3 +1,6 @@
+/**
+ * Model defining the attributes of a UsageTick
+ */
 export interface UsageTick {
     jobId: string;
     gt: string;
@@ -6,6 +9,9 @@ export interface UsageTick {
     cfApps?: CfApp[];
 }
 
+/**
+ * Model defining the attributes of an application on Cloud Foundry
+ */
 export interface CfApp {
     id: string;
     jobId: string;
@@ -15,6 +21,9 @@ export interface CfApp {
     instances: Instance[]
 }
 
+/**
+ * Model defining the attributes of an instance of an application on Cloud Foundry
+ */
 export interface Instance {
     jobId: string;
     appId: string;
@@ -24,6 +33,10 @@ export interface Instance {
     usage: Usage
 }
 
+
+/**
+ * Model defining the usage attributes of an application on Cloud Foundry
+ */
 export interface Usage {
     id: string;
     jobId: string;

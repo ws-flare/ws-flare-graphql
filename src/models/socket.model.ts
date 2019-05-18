@@ -1,3 +1,6 @@
+/**
+ * Model defining the attributes of a socket
+ */
 export interface ConnectedSocketTick {
     jobId: string;
     gt: string;

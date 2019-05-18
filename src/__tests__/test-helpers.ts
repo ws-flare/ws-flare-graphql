@@ -17,6 +17,9 @@ export const apis = {
     monitorApi: 'http://monitor.com'
 };
 
+/**
+ * Starts a new rabbitMQ docket container for use in test
+ */
 export async function startMqContainer(): Promise<{ container: Container, port: number }> {
     const docker = new Docker({socketPath: '/var/run/docker.sock'});
     const port = await getRandomPort();
@@ -55,6 +58,11 @@ export async function startMqContainer(): Promise<{ container: Container, port: 
     return {container, port};
 }
 
+/**
+ * Get a connection to the rabbitMQ server
+ *
+ * @param port - The port the server is running on
+ */
 export async function getAMQPConn(port: number): Promise<Connection> {
     const AMQP_URL = 'localhost';
     const AMQP_USER = 'guest';
